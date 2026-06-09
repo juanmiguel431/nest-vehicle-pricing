@@ -1,4 +1,13 @@
-import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query, } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -11,8 +20,6 @@ export class UsersController {
 
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    console.log(typeof id);
-
     const user = await this.service.findById(id);
 
     if (!user) {
@@ -25,9 +32,21 @@ export class UsersController {
   @Get()
   findAll(@Query('email') email?: string) {
     if (email) {
-      return this.service.findAll({ email });
+      return this.service.findByEmail(email);
     }
 
-    return this.service.findAll();
+    return this.service.find();
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.service.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.service.remove(user);
   }
 }
