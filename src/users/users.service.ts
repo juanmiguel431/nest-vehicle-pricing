@@ -11,11 +11,6 @@ export class UsersService {
     this.repository = repository;
   }
 
-  createEntity(email: string, password: string) {
-    const user = this.repository.create({ email, password });
-    return this.repository.save(user);
-  }
-
   findById(id: number) {
     return this.repository.findOneBy({ id });
   }
@@ -26,6 +21,11 @@ export class UsersService {
 
   findAll() {
     return this.repository.find();
+  }
+
+  createEntity(email: string, password: string) {
+    const user = this.repository.create({ email, password });
+    return this.repository.save(user);
   }
 
   async updateEntity(id: number, attrs: Partial<User>) {
