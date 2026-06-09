@@ -23,7 +23,7 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@Query('email') email: string | undefined) {
+  findAll(@Query('email') email?: string) {
     if (email) {
       return this.service.findAll({ email });
     }
