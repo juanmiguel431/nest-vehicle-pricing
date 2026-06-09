@@ -4,12 +4,29 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "juanmiguel431@gmail.com",
+    "email": "juanmiguel431@hotmail.com",
     "password": "juanmiguel431",
     "admin": true
 }
 
-###
+### Find a particular user with a given id.
 
 GET localhost:3000/users/1
+Content-Type: application/json
+
+
+### Find all users or filer by email.
+
+GET localhost:3000/users?email=juanmiguel431@gmail.com
+Content-Type: application/json
+
+###
+
+GET localhost:3000/users?email=juanmiguel431@hotmail.com
+Content-Type: application/json
+
+
+###
+
+GET localhost:3000/users
 Content-Type: application/json

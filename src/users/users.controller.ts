@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, ParseIntPipe, Query, } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -26,5 +20,14 @@ export class UsersController {
     }
 
     return user;
+  }
+
+  @Get()
+  findAll(@Query('email') email: string | undefined) {
+    if (email) {
+      return this.service.findAll({ email });
+    }
+
+    return this.service.findAll();
   }
 }

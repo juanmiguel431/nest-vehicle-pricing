@@ -19,8 +19,8 @@ export class UsersService {
     return this.repository.findOne({ where: { email } });
   }
 
-  findAll() {
-    return this.repository.find();
+  findAll(filters?: Partial<User>) {
+    return this.repository.find({ where: filters });
   }
 
   createEntity(email: string, password: string) {
