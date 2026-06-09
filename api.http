@@ -8,3 +8,8 @@ Content-Type: application/json
     "password": "juanmiguel431",
     "admin": true
 }
+
+###
+
+GET localhost:3000/users/1
+Content-Type: application/json
