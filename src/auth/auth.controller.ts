@@ -13,7 +13,7 @@ export class AuthController {
   @Post('signup')
   async signup(@Body() body: CreateUserDto) {
 
-    const result = await this.userService.create(body.email, body.password);
+    const result = await this.userService.createEntity(body.email, body.password);
     console.log(body);
   }
 }

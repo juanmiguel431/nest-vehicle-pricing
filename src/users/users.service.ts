@@ -11,12 +11,12 @@ export class UsersService {
     this.repository = repository;
   }
 
-  create(email: string, password: string) {
+  createEntity(email: string, password: string) {
     const user = this.repository.create({ email, password });
     return this.repository.save(user);
   }
 
-  async findById(id: number) {
+  findById(id: number) {
     return this.repository.findOneBy({ id });
   }
 
@@ -28,19 +28,30 @@ export class UsersService {
     return this.repository.find();
   }
 
-  async update(id: number, attrs: Partial<User>) {
-    return this.repository.update(id, attrs);
+  async updateEntity(id: number, attrs: Partial<User>) {
+    const user = await this.repository.findOneByOrFail({ id });
+    Object.assign(user, attrs);
+    return this.repository.save(user);
   }
 
-  async updatePassword(id: number, newPassword: string) {
-    return this.repository.update(id, { password: newPassword });
+  async removeEntity(id: number) {
+    const user = await this.repository.findOneByOrFail({ id });
+    return this.repository.remove(user);
   }
 
-  async remove(id: number) {
-    return this.repository.delete(id);
+  deleteById(id: number) {
+    return this.repository.delete({ id });
   }
 
-  async removeAll() {
-    return this.repository.clear();
+  update(id: number, attrs: Partial<User>) {
+    return this.repository.update({ id }, attrs);
+  }
+
+  insert(user: User) {
+    return this.repository.insert(user);
+  }
+
+  async updatePasswordEntity(id: number, newPassword: string) {
+    return this.updateEntity(id, { password: newPassword });
   }
 }
