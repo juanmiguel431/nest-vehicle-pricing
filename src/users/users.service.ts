@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyOptions, RemoveOptions, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  Repository,
+} from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 
@@ -28,7 +31,12 @@ export class UsersService {
     return this.repository.save(user);
   }
 
-  remove(entity: User, options?: RemoveOptions) {
-    return this.repository.remove(entity, options);
+  remove(entity: User) {
+    return this.repository.remove(entity);
+  }
+
+  update(target: User, source: Partial<User>) {
+    this.repository.merge(target, source);
+    return this.repository.save(target);
   }
 }

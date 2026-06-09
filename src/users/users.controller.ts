@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,9 +7,11 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +22,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  async find(@Param('id', ParseIntPipe) id: number) {
+  async findById(@Param('id', ParseIntPipe) id: number) {
     const user = await this.service.findById(id);
 
     if (!user) {
@@ -32,7 +35,7 @@ export class UsersController {
   @Get()
   findAll(@Query('email') email?: string) {
     if (email) {
-      return this.service.findByEmail(email);
+      return this.service.find({ where: { email }});
     }
 
     return this.service.find();
@@ -40,7 +43,7 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     const user = await this.service.findById(id);
 
     if (!user) {
@@ -48,5 +51,19 @@ export class UsersController {
     }
 
     await this.service.remove(user);
+  }
+
+  @Patch(':id')
+  async patch(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateUserDto,
+  ) {
+    const user = await this.service.findById(id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return await this.service.update(user, body);
   }
 }
