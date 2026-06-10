@@ -14,7 +14,10 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
-import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
+import {
+  Serialize,
+  SerializeInterceptor,
+} from '../interceptors/serialize.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -24,7 +27,7 @@ export class UsersController {
     this.service = service;
   }
 
-  @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     console.log('findById is running', id);
@@ -38,7 +41,7 @@ export class UsersController {
     // return UserDto.fromUser(user);
   }
 
-  @UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   @Get()
   async findAll(@Query('email') email?: string) {
     if (email) {
