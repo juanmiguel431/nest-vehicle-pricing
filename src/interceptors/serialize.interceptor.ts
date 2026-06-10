@@ -6,18 +6,17 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { plainToInstance } from 'class-transformer';
-import { ClassConstructor } from 'class-transformer/types/interfaces/class-constructor.type';
+import { plainToInstance, ClassConstructor } from 'class-transformer';
 
-export function Serialize(type: ClassConstructor<any>) {
+export function Serialize<T>(type: ClassConstructor<T>) {
   return UseInterceptors(new SerializeInterceptor(type));
 }
 
 // https://rxjs.dev/guide/overview
-export class SerializeInterceptor implements NestInterceptor {
-  private type: ClassConstructor<any>;
+export class SerializeInterceptor<T> implements NestInterceptor {
+  private readonly type: ClassConstructor<T>;
 
-  constructor(type: ClassConstructor<any>) {
+  constructor(type: ClassConstructor<T>) {
     this.type = type;
   }
 
