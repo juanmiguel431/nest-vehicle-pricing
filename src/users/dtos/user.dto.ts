@@ -1,7 +1,11 @@
 import { User } from '../user.entity';
+import { Expose } from 'class-transformer';
 
 export class UserDto {
+  @Expose()
   id: number;
+
+  @Expose()
   email: string;
 
   static fromUser(user: User) {

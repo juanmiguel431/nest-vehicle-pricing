@@ -19,7 +19,9 @@ export class SerializeInterceptor implements NestInterceptor {
       map((data: any) => {
         // Run something before the response is sent out
         console.log('Im running before response is sent out', data);
-        return plainToClass(UserDto, data);
+        return plainToClass(UserDto, data, {
+          excludeExtraneousValues: true,
+        });
       })
     );
   }

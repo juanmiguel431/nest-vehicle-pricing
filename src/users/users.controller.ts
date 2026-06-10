@@ -34,7 +34,8 @@ export class UsersController {
       throw new NotFoundException('User not found');
     }
 
-    return UserDto.fromUser(user);
+    return user;
+    // return UserDto.fromUser(user);
   }
 
   @Get()
