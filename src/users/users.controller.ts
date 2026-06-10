@@ -9,10 +9,12 @@ import {
   ParseIntPipe,
   Patch,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
+import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -22,26 +24,28 @@ export class UsersController {
     this.service = service;
   }
 
+  @UseInterceptors(SerializeInterceptor)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
+    console.log('findById is running', id);
     const user = await this.service.findById(id);
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return new UserDto(user);
+    return UserDto.fromUser(user);
   }
 
   @Get()
   async findAll(@Query('email') email?: string) {
     if (email) {
       const users = await this.service.find({ where: { email } });
-      return users.map((user) => new UserDto(user));
+      return users.map((user) => UserDto.fromUser(user));
     }
 
     const users = await this.service.find();
-    return users.map((user) => new UserDto(user));
+    return users.map((user) => UserDto.fromUser(user));
   }
 
   @Delete(':id')
