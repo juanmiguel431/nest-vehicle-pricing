@@ -9,6 +9,8 @@ import {
   ParseIntPipe,
   Patch,
   Query,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -21,6 +23,7 @@ export class UsersController {
     this.service = service;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     const user = await this.service.findById(id);
@@ -32,10 +35,11 @@ export class UsersController {
     return user;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll(@Query('email') email?: string) {
     if (email) {
-      return this.service.find({ where: { email }});
+      return this.service.find({ where: { email } });
     }
 
     return this.service.find();
