@@ -24,7 +24,7 @@ export class UsersController {
     this.service = service;
   }
 
-  @UseInterceptors(SerializeInterceptor)
+  @UseInterceptors(new SerializeInterceptor(UserDto))
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     console.log('findById is running', id);
@@ -38,15 +38,20 @@ export class UsersController {
     // return UserDto.fromUser(user);
   }
 
+  @UseInterceptors(new SerializeInterceptor(UserDto))
   @Get()
   async findAll(@Query('email') email?: string) {
     if (email) {
       const users = await this.service.find({ where: { email } });
-      return users.map((user) => UserDto.fromUser(user));
+      return users;
+
+      // return users.map((user) => UserDto.fromUser(user));
     }
 
     const users = await this.service.find();
-    return users.map((user) => UserDto.fromUser(user));
+    return users;
+
+    // return users.map((user) => UserDto.fromUser(user));
   }
 
   @Delete(':id')
