@@ -8,6 +8,13 @@ const scrypt = promisify(_scrypt);
 @Injectable()
 export class AuthService {
   private userService: UsersService;
+  private version = '1';
+  private algorithm = 'sha512';
+  private keylen = 64;
+  private n = 16384;
+  private r = 8;
+  private p = 1;
+  private delimiter = '$';
 
   constructor(userService: UsersService) {
     this.userService = userService;
@@ -23,30 +30,77 @@ export class AuthService {
     // Hash the password
     const salt = randomBytes(16).toString('hex');
 
-    // const algorithm = 'sha512';
-    // const iterations = 100_000;
-    // // const hash = pbkdf2Sync(password, salt, iterations, 64, algorithm).toString('hex');
-
-    const algorithm = 'scrypt';
-    const keylen = 64;
-    const n = 16384;
-    const r = 8;
-    const p = 1;
-
-    const hash = scryptSync(password, salt, keylen, {
-      N: n,
-      r: r,
-      p: p,
+    const hash = scryptSync(password, salt, this.keylen, {
+      N: this.n,
+      r: this.r,
+      p: this.p,
     }).toString('hex');
-
-    const delimiter = '$';
-    const passwordHash = `${algorithm}${delimiter}${keylen}${delimiter}${n}${delimiter}${r}${delimiter}${p}${delimiter}${salt}${delimiter}${hash}`;
+    const passwordHash = this.getPasswordHash(salt, hash);
 
     // Create a new user and save it
     return await this.userService.create(email, passwordHash);
   }
 
-  signIn() {
+  async signIn(email: string, password: string) {
+    // See if email is in use
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new Error('Email is not registered');
+    }
 
+    const parsedPassword = this.parsePasswordHash(user.password);
+
+    const hash = scryptSync(password, parsedPassword.salt, this.keylen, {
+      N: this.n,
+      r: this.r,
+      p: this.p,
+    }).toString('hex');
+
+    const passwordHash = this.getPasswordHash(parsedPassword.salt, hash);
+
+    if (user.password !== passwordHash) {
+      throw new Error('Incorrect password');
+    }
+
+    return user;
   }
+
+  private getPasswordHash(salt: string, hash: string) {
+    return [
+      this.version,
+      this.algorithm,
+      this.keylen,
+      this.n,
+      this.r,
+      this.p,
+      salt,
+      hash,
+    ].join(this.delimiter);
+  }
+
+  private parsePasswordHash(passwordHash: string): ParsedPasswordHash {
+    const [version, algorithm, keylen, n, r, p, salt, hash] = passwordHash.split(this.delimiter);
+
+    return {
+      version: Number(version),
+      algorithm,
+      keylen: Number(keylen),
+      n: Number(n),
+      r: Number(r),
+      p: Number(p),
+      salt,
+      hash,
+    };
+  }
+}
+
+interface ParsedPasswordHash {
+  version: number;
+  algorithm: string;
+  keylen: number;
+  n: number;
+  r: number;
+  p: number;
+  salt: string;
+  hash: string;
 }

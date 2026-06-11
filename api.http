@@ -1,12 +1,21 @@
 
 ### Create a new user
-POST http://localhost:3000/auth/signup
+POST http://localhost:3000/auth/sign-up
 Content-Type: application/json
 
 {
     "email": "juanmiguel431@hotmail.com",
     "password": "juanmiguel431",
     "admin": true
+}
+
+### Sign In
+POST http://localhost:3000/auth/sign-in
+Content-Type: application/json
+
+{
+    "email": "juanmiguel431@hotmail.com",
+    "password": "juanmiguel431"
 }
 
 ### Find a particular user with a given id.
@@ -34,7 +43,7 @@ Content-Type: application/json
 
 ###
 
-DELETE localhost:3000/users/6
+DELETE localhost:3000/users/5
 Content-Type: application/json
 
 
