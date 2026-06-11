@@ -9,7 +9,6 @@ import {
   Param,
   Post,
   Session,
-  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
@@ -18,10 +17,8 @@ import { SignInDto } from '../users/dtos/sign-in.dto';
 import { UsersService } from '../users/users.service';
 import { CurrentUser } from './docorators/current-user.decorator';
 import { User } from '../users/user.entity';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 
 @Controller('auth')
-@UseInterceptors(CurrentUserInterceptor)
 export class AuthController {
   private authService: AuthService;
   private userService: UsersService;

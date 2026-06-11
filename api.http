@@ -18,6 +18,18 @@ Content-Type: application/json
     "password": "juanmiguel431"
 }
 
+### Find me
+
+GET localhost:3000/auth/me
+Content-Type: application/json
+
+
+### Who Am I
+
+GET localhost:3000/auth/who-am-i
+Content-Type: application/json
+
+
 ### Find a particular user with a given id.
 
 GET localhost:3000/users/1
@@ -55,17 +67,6 @@ Content-Type: application/json
 {
   "password": "55555"
 }
-
-### Find me
-
-GET localhost:3000/auth/me
-Content-Type: application/json
-
-
-### Who Am I
-
-GET localhost:3000/auth/who-am-i
-Content-Type: application/json
 
 ### Sign Out
 
