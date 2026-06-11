@@ -1,4 +1,11 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
 import { UserDto } from '../users/dtos/user.dto';
@@ -19,6 +26,7 @@ export class AuthController {
   }
 
   @Post('sign-in')
+  @HttpCode(HttpStatus.OK)
   async signIn(@Body() body: SignInDto) {
     try {
       const user = await this.authService.signIn(body.email, body.password);
