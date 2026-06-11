@@ -55,3 +55,20 @@ Content-Type: application/json
 {
   "password": "55555"
 }
+
+### Find me
+
+GET localhost:3000/auth/me
+Content-Type: application/json
+
+
+### Set Color
+
+POST localhost:3000/auth/colors/green
+Content-Type: application/json
+
+
+### Get Color
+
+GET localhost:3000/auth/colors
+Content-Type: application/json
