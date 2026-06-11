@@ -10,13 +10,16 @@ import {
   ParseIntPipe,
   Patch,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { Serialize, } from '../interceptors/serialize.interceptor';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard)
 @Serialize(UserDto)
 export class UsersController {
   private service: UsersService;
