@@ -61,6 +61,12 @@ Content-Type: application/json
 GET localhost:3000/auth/me
 Content-Type: application/json
 
+
+### Who Am I
+
+GET localhost:3000/auth/who-am-i
+Content-Type: application/json
+
 ### Sign Out
 
 POST localhost:3000/auth/sign-out
