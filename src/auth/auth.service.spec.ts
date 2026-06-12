@@ -5,12 +5,15 @@ import { UsersService } from '../users/users.service';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let fakeUsersService: Partial<UsersService>;
 
   beforeEach(async () => {
     const user = new User();
     user.id = 1;
+    user.email = 'test@test.com';
+    user.password = '1234';
 
-    const fakeUsersService: Partial<UsersService> = {
+    fakeUsersService = {
       findById: (id: number) => Promise.resolve<User | null>(null),
       findByEmail: (email: string) => Promise.resolve<User | null>(null),
       find: () => Promise.resolve<User[]>([]),
@@ -45,5 +48,17 @@ describe('AuthService', () => {
     const user = await service.signUp('test@test.com', '123456');
 
     expect(user.password).not.toEqual('123456');
+  });
+
+  it('throws an error if user signs up with email that is in use', async () => {
+    fakeUsersService.findByEmail = (email: string) => {
+      const user = new User();
+      user.id = 1;
+      user.email = email;
+      user.password = '1234';
+      return Promise.resolve<User>(user);
+    };
+
+    await expect(service.signUp('test@test.com', '1234')).rejects.toThrow(Error);
   });
 });
