@@ -12,7 +12,7 @@ describe('AuthService', () => {
     user.email = 'test@test.com';
     user.password = '123456';
 
-    const fakeUsersService = {
+    const fakeUsersService: Partial<UsersService> = {
       findById: (id: number) => Promise.resolve<User | null>(null),
       findByEmail: (email: string) => Promise.resolve<User | null>(null),
       find: () => Promise.resolve<User[]>([]),
@@ -49,7 +49,7 @@ it('can create an instance of AuthService', async () => {
   user.email = 'test@test.com';
   user.password = '123456';
 
-  const fakeUsersService = {
+  const fakeUsersService: Partial<UsersService> = {
     findById: (id: number) => Promise.resolve<User | null>(null),
     findByEmail: (email: string) => Promise.resolve<User | null>(null),
     find: () => Promise.resolve<User[]>([]),
