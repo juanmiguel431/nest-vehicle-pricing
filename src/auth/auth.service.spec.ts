@@ -23,8 +23,7 @@ describe('AuthService', () => {
         return Promise.resolve<User>(user);
       },
       remove: (entity: User) => Promise.resolve<User>(user),
-      update: (target: User, source: Partial<User>) =>
-        Promise.resolve<User>(user),
+      update: (target: User, source: Partial<User>) => Promise.resolve<User>(user),
     };
 
     const module = await Test.createTestingModule({
@@ -59,9 +58,7 @@ describe('AuthService', () => {
       return Promise.resolve<User>(user);
     };
 
-    await expect(service.signUp('test@test.com', '1234')).rejects.toThrow(
-      Error,
-    );
+    await expect(service.signUp('test@test.com', '1234')).rejects.toThrow(Error);
   });
 
   it('throws if signs in is called with an unused email', async () => {
