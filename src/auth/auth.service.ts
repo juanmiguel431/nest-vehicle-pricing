@@ -8,13 +8,13 @@ const scrypt = promisify(_scrypt);
 @Injectable()
 export class AuthService {
   private userService: UsersService;
-  private version = '1';
-  private algorithm = 'sha512';
-  private keylen = 64;
-  private n = 16384;
-  private r = 8;
-  private p = 1;
-  private delimiter = '$';
+  private static version = '1';
+  private static algorithm = 'sha512';
+  private static keylen = 64;
+  private static n = 16384;
+  private static r = 8;
+  private static p = 1;
+  private static delimiter = '$';
 
   constructor(userService: UsersService) {
     this.userService = userService;
@@ -28,17 +28,26 @@ export class AuthService {
     }
 
     // Hash the password
-    const salt = randomBytes(16).toString('hex');
-
-    const hash = scryptSync(password, salt, this.keylen, {
-      N: this.n,
-      r: this.r,
-      p: this.p,
-    }).toString('hex');
-    const passwordHash = this.getPasswordHash(salt, hash);
+    const passwordHash = AuthService.getPasswordHash(password);
 
     // Create a new user and save it
     return await this.userService.create(email, passwordHash);
+  }
+
+  public static getPasswordHash(password: string) {
+    const salt = randomBytes(16).toString('hex');
+
+    const hash = this.scriptPassword(password, salt);
+
+    return this.getPasswordHashWithMetadata(salt, hash);
+  }
+
+  private static scriptPassword(password: string, salt: string) {
+    return scryptSync(password, salt, this.keylen, {
+      N: this.n,
+      r: this.r,
+      p: this.p
+    }).toString('hex');
   }
 
   async signIn(email: string, password: string) {
@@ -48,15 +57,11 @@ export class AuthService {
       throw new Error('Email is not registered');
     }
 
-    const parsedPassword = this.parsePasswordHash(user.password);
+    const parsedPassword = AuthService.parsePasswordHash(user.password);
 
-    const hash = scryptSync(password, parsedPassword.salt, this.keylen, {
-      N: this.n,
-      r: this.r,
-      p: this.p,
-    }).toString('hex');
+    const hash = AuthService.scriptPassword(password, parsedPassword.salt);
 
-    const passwordHash = this.getPasswordHash(parsedPassword.salt, hash);
+    const passwordHash = AuthService.getPasswordHashWithMetadata(parsedPassword.salt, hash);
 
     if (user.password !== passwordHash) {
       throw new Error('Incorrect password');
@@ -65,7 +70,7 @@ export class AuthService {
     return user;
   }
 
-  private getPasswordHash(salt: string, hash: string) {
+  private static getPasswordHashWithMetadata(salt: string, hash: string) {
     return [
       this.version,
       this.algorithm,
@@ -78,7 +83,7 @@ export class AuthService {
     ].join(this.delimiter);
   }
 
-  private parsePasswordHash(passwordHash: string): ParsedPasswordHash {
+  private static parsePasswordHash(passwordHash: string): ParsedPasswordHash {
     const [version, algorithm, keylen, n, r, p, salt, hash] = passwordHash.split(this.delimiter);
 
     return {

@@ -71,23 +71,27 @@ describe('AuthService', () => {
   });
 
   it('throws if an invalid password is provided', async () => {
+    const password = '1234';
+
     const user = new User();
     user.id = 1;
     user.email = 'test@test.com';
-    user.password = '1$sha512$64$16384$8$1$3cf687834be7e98824196780fa7eddb4$97dc3a0a1430c399ada5e74dd1c20f7212738c9e419a1aa282a380f4728df55dbf0b05aec81c95b2e1aa07c336cab6fd25e0f5f1547352ab4d3af0a3478dc92a';
+    user.password = AuthService.getPasswordHash(password);
 
     fakeUsersService.findByEmail = () => Promise.resolve(user);
     await expect(service.signIn('test@test.com', '5678')).rejects.toThrow(Error);
   });
 
   it('it returns a user if valid password is provided', async () => {
+    const password = '1234';
+
     const user = new User();
     user.id = 1;
     user.email = 'test@test.com';
-    user.password = '1$sha512$64$16384$8$1$3cf687834be7e98824196780fa7eddb4$ce08d7f4b023ee2c1ada6df9a5a73fea8ca2b08d775dfff1e67b5aa8b0f0aeeb504a2e8fd2a03b7871495696a500f636e9ff58cbd4eb335158ac4d6871b2b1bf';
+    user.password = AuthService.getPasswordHash(password);
 
     fakeUsersService.findByEmail = () => Promise.resolve(user);
-    const userLogged = await service.signIn('test@test.com', '5678');
+    const userLogged = await service.signIn('test@test.com', '1234');
 
     expect(userLogged).toEqual(user);
   });
