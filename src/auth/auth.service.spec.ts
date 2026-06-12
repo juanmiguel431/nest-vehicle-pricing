@@ -61,4 +61,8 @@ describe('AuthService', () => {
 
     await expect(service.signUp('test@test.com', '1234')).rejects.toThrow(Error);
   });
+
+  it('throws if signs in is called with an unused email', async () => {
+    await expect(service.signIn('test@test.com', '1234')).rejects.toThrow(Error);
+  });
 });
