@@ -83,12 +83,10 @@ describe('AuthService', () => {
   });
 
   it('it returns a user if valid password is provided', async () => {
-    const password = '1234';
-
     const user = new User();
     user.id = 1;
     user.email = 'test@test.com';
-    user.password = AuthService.getPasswordHash(password);
+    user.password = AuthService.getPasswordHash('1234');
 
     fakeUsersService.findByEmail = () => Promise.resolve(user);
     const userLogged = await service.signIn('test@test.com', '1234');
