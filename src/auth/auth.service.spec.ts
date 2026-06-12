@@ -59,10 +59,24 @@ describe('AuthService', () => {
       return Promise.resolve<User>(user);
     };
 
-    await expect(service.signUp('test@test.com', '1234')).rejects.toThrow(Error);
+    await expect(service.signUp('test@test.com', '1234')).rejects.toThrow(
+      Error,
+    );
   });
 
   it('throws if signs in is called with an unused email', async () => {
-    await expect(service.signIn('test@test.com', '1234')).rejects.toThrow(Error);
+    await expect(service.signIn('test@test.com', '1234')).rejects.toThrow(
+      Error,
+    );
+  });
+
+  it('throws if an invalid password is provided', async () => {
+    const user = new User();
+    user.id = 1;
+    user.email = 'test@test.com';
+    user.password = '1$sha512$64$16384$8$1$3cf687834be7e98824196780fa7eddb4$97dc3a0a1430c399ada5e74dd1c20f7212738c9e419a1aa282a380f4728df55dbf0b05aec81c95b2e1aa07c336cab6fd25e0f5f1547352ab4d3af0a3478dc92a';
+
+    fakeUsersService.findByEmail = () => Promise.resolve(user);
+    await expect(service.signIn('test@test.com', '5678')).rejects.toThrow(Error);
   });
 });

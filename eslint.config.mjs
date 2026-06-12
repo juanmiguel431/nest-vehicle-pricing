@@ -33,6 +33,7 @@ export default tseslint.config(
         endOfLine: "auto",
         singleQuote: true,
         trailingComma: "off",
+        printWidth: "off",
       }],
     },
   },
