@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 import { SignInDto } from '../users/dtos/sign-in.dto';
+import { BadRequestException } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -53,5 +54,13 @@ describe('AuthController', () => {
 
     expect(result.email).toEqual('test@example.com');
     expect(session.userId).toEqual(1);
+  });
+
+  it('signIn should throw an error if sign in is called with an unused email', async () => {
+    fakeAuthService.signIn = () => {
+      throw new Error('Invalid Credentials');
+    };
+
+    await expect(controller.signIn(new SignInDto(), {})).rejects.toThrow(BadRequestException);
   });
 });
