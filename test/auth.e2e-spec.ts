@@ -15,13 +15,13 @@ describe('Authentication System (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    setupApp(app);
+    // setupApp(app);
     await app.init();
   });
 
   it('handles a signup request', () => {
     const body = new CreateUserDto();
-    body.email = 'juanmiguel4313@hotmail.com';
+    body.email = 'juanmiguel4314@hotmail.com';
     body.password = 'juanmiguel431';
 
     return request(app.getHttpServer())
