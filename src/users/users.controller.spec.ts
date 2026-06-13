@@ -3,6 +3,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { FindManyOptions } from 'typeorm';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -54,4 +55,9 @@ describe('UsersController', () => {
     const foundUser = await controller.findById(1);
     expect(foundUser.id).toEqual(1);
   });
+
+  it('findById throws an error if user with given id is not found', async () => {
+    fakeUsersService.findById = (id: number) => Promise.resolve(null);
+    await expect(controller.findById(1)).rejects.toThrow(NotFoundException);
+  })
 });
