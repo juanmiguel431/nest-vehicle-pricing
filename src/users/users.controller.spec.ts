@@ -43,4 +43,15 @@ describe('UsersController', () => {
     expect(users.length).toEqual(1);
     expect(users[0].email).toEqual('tests@test.com');
   });
+
+  it('findById returns a single user with the given id', async () => {
+    fakeUsersService.findById = (id: number) => {
+      const user = new User();
+      user.id = id;
+      return Promise.resolve(user);
+    }
+
+    const foundUser = await controller.findById(1);
+    expect(foundUser.id).toEqual(1);
+  });
 });
