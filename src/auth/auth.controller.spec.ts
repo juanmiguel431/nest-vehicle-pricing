@@ -37,14 +37,12 @@ describe('AuthController', () => {
   });
 
   it('signIn should return a user when provided correct credentials and updates session', async () => {
-    // fakeAuthService.signIn = jest.fn().mockResolvedValue({ id: 1, email: 'test@example.com' });
-    const user = new User();
-
-    fakeAuthService.signIn = (email, password) => {
+    fakeAuthService.signIn = jest.fn().mockImplementation((email, password) => {
+      const user = new User();
       user.id = 1;
       user.email = email;
       return Promise.resolve(user);
-    };
+    });
 
     const session: Record<string, any> = {};
     const body = new SignInDto();
@@ -54,6 +52,7 @@ describe('AuthController', () => {
 
     expect(result.email).toEqual('test@example.com');
     expect(session.userId).toEqual(1);
+    expect(fakeAuthService.signIn).toHaveBeenCalledTimes(1);
   });
 
   it('signIn should throw an error if sign in is called with an unused email', async () => {
