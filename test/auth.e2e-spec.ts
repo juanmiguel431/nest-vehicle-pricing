@@ -21,8 +21,8 @@ describe('Authentication System (e2e)', () => {
 
   it('handles a signup request', () => {
     const body = new CreateUserDto();
-    body.email = 'juanmiguel4314@hotmail.com';
-    body.password = 'juanmiguel431';
+    body.email = 'test1@test.com';
+    body.password = 'test1';
 
     return request(app.getHttpServer())
       .post('/auth/sign-up')
@@ -33,6 +33,26 @@ describe('Authentication System (e2e)', () => {
         expect(id).toBeDefined();
         expect(email).toEqual(body.email);
       });
+  });
+
+  it('signup as a new user then get the currently logged in user', async () => {
+    const payload = new CreateUserDto();
+    payload.email = 'test2@test.com';
+    payload.password = 'test2';
+
+    const response = await request(app.getHttpServer())
+      .post('/auth/sign-up')
+      .send(payload)
+      .expect(HttpStatus.CREATED);
+
+    const cookie = response.get('Set-Cookie')!;
+
+    const { body } = await request(app.getHttpServer())
+      .get('/auth/me')
+      .set('Cookie', cookie)
+      .expect(HttpStatus.OK);
+
+    expect(body.email).toEqual(payload.email);
   });
 
   afterEach(async () => {
