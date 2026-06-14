@@ -7,7 +7,7 @@ Content-Type: application/json
   "make": "toyota",
   "model": "corolla",
   "year": 1980,
-  "millage": 150000,
+  "mileage": 150000,
   "lng": 0,
   "lat": 0,
   "price": 20000
@@ -22,3 +22,8 @@ Content-Type: application/json
 {
   "approved": true
 }
+
+### Get an estimate for an existing vehicle
+
+GET http://localhost:3000/reports?make=toyota&model=corolla&lng=0&lat=0&mileage=20000&year=1980
+Content-Type: application/json

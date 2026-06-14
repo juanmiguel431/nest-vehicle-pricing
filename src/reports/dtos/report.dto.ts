@@ -42,7 +42,7 @@ export class ReportDto {
     dto.year = report.year;
     dto.lng = report.lng;
     dto.lat = report.lat;
-    dto.millage = report.millage;
+    dto.millage = report.mileage;
     dto.userId = report.userId;
     dto.approved = report.approved;
 
