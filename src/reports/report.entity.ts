@@ -33,4 +33,7 @@ export class Report {
 
   @Column()
   userId: number;
+
+  @Column({ default: false })
+  approved: boolean;
 }

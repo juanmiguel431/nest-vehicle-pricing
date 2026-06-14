@@ -30,6 +30,9 @@ export class ReportDto {
   @Expose()
   userId: number;
 
+  @Expose()
+  approved: boolean;
+
   public static fromReport(report: Report) {
     const dto = new ReportDto();
     dto.id = report.id;
@@ -41,6 +44,7 @@ export class ReportDto {
     dto.lat = report.lat;
     dto.millage = report.millage;
     dto.userId = report.userId;
+    dto.approved = report.approved;
 
     return dto;
   }
