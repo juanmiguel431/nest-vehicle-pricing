@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../users/user.entity';
 
 @Entity()
@@ -28,5 +28,9 @@ export class Report {
   millage: number;
 
   @ManyToOne(() => User, user => user.reports)
+  @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: number;
 }
